@@ -7,7 +7,8 @@
 //
 
 import Foundation
-
+#if os(Linux)
+#elseif
 @available(macOS 10.15, iOS 13.0, watchOS 6.0, tvOS 13.0, *)
 public class NativeEngine: NSObject, Engine, URLSessionDataDelegate, URLSessionWebSocketDelegate {
     private var task: URLSessionWebSocketTask?
@@ -95,3 +96,4 @@ public class NativeEngine: NSObject, Engine, URLSessionDataDelegate, URLSessionW
         broadcast(event: .disconnected(r, UInt16(closeCode.rawValue)))
     }
 }
+#endif
