@@ -21,7 +21,7 @@
 //////////////////////////////////////////////////////////////////////////////////////////////////
 
 import Foundation
-import CommonCrypto
+import Crypto
 
 public enum FoundationSecurityError: Error {
     case invalidRequest
@@ -88,12 +88,9 @@ extension FoundationSecurity: HeaderValidator {
 
 private extension String {
     func sha1Base64() -> String {
-        let data = self.data(using: .utf8)!
-        let pointer = data.withUnsafeBytes { (bytes: UnsafeRawBufferPointer) -> [UInt8] in
-            var digest = [UInt8](repeating: 0, count:Int(CC_SHA1_DIGEST_LENGTH))
-            CC_SHA1(bytes.baseAddress, CC_LONG(data.count), &digest)
-            return digest
+        let digest = Insecure.SHA1.hash(data: self.data(using: .utf8)!)
+        return digest.withUnsafeBytes {
+            Data($0).base64EncodedString()
         }
-        return Data(pointer).base64EncodedString()
     }
 }
